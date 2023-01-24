@@ -1,10 +1,10 @@
 from ursina import *
 from AI.zombie_AI import ZombieAI
+import numpy
 
 
 class UrsinaZombie(Entity):
     def __init__(self, target, field, **kwargs):
-        self.cursor = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)
         super().__init__(
             parent=scene,
             model="zombie",
@@ -56,6 +56,7 @@ class UrsinaZombie(Entity):
         #         move_amount[2] = max(move_amount[2], 0)
         #     self.position += move_amount
         self.direction = self.zombie_AI.update_heading()
+        self.rotation.y = 180 - numpy.degrees(numpy.angle(self.direction[0] + 1j * self.direction[1]))
 
         direction_2d = self.zombie_AI.update_heading()
         self.direction = Vec3(direction_2d[0], 0, direction_2d[1])
@@ -75,7 +76,8 @@ class UrsinaZombie(Entity):
             #     self.grounded = True
             #     # make sure it's not a wall and that the point is not too far up
             #     if ray.world_normal.y > .7 and ray.world_point.y - self.world_y < .5: # walk up slope
-        self.y = ray.world_point[1]
+        if ray.world_point is not None:
+            self.y = ray.world_point[1]
             #     return
             # else:
             #     self.grounded = False
@@ -109,9 +111,9 @@ class UrsinaZombie(Entity):
         self.grounded = True
 
 
-    def on_enable(self):
-        mouse.locked = False
-        self.cursor.enabled = True
+    # def on_enable(self):
+    #     mouse.locked = False
+    #     self.cursor.enabled = True
 
 
     def on_disable(self):
@@ -123,6 +125,9 @@ class UrsinaZombie(Entity):
 
     def is_finished(self):
         return self.zombie_AI.finished()
+
+    def on_hit(self):
+        self.color = color.rgb(255, 0, 0)
 
 
 if __name__ == '__main__':

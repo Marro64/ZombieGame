@@ -7,6 +7,7 @@ from zombie_spawner import ZombieSpawner
 from hand_tracking.cursor import Cursor as Aim
 from game_state import GameState
 from ursinaEnvironment import UrsinaEnvironment
+from hand_tracking.hitdetection import HitDetection
 
 from ursina import *
 
@@ -27,6 +28,7 @@ class Game:
         self.cursor = Aim(self)
         self.game_state = GameState(self)
         self.ursina_environment = UrsinaEnvironment(self.size)
+        self.hitdetection = HitDetection(self.cursor)
 
         self.app.run()
 
@@ -37,6 +39,7 @@ class Game:
     def shoot(self, location):
         if not self.game_state.game_over:
             self.zombie_spawner.shoot(location)
+            self.hitdetection.shoot(location)
         else:
             self.game_state.click()
 
