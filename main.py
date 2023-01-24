@@ -24,7 +24,7 @@ class Game:
         self.maze = Maze(Constants.GRID_COLS, Constants.GRID_ROWS, self.size)
         self.maze.generate_open_maze()
         self.search = Search(self.maze)
-        self.zombie_spawner = ZombieSpawner(self, self.size, (-1, -1), self.maze)
+        self.zombie_spawner = ZombieSpawner(self, self.size, (0, 0), self.maze)
         self.cursor = Aim(self)
         self.game_state = GameState(self)
         self.ursina_environment = UrsinaEnvironment(self.size)

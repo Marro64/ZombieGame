@@ -20,8 +20,6 @@ class UrsinaZombie(Entity):
 
         self.gravity = 1
 
-        self.zombie_AI = ZombieAI(self.get_position_2d(), target, field, self)
-
         for key, value in kwargs.items():
             setattr(self, key ,value)
 
@@ -32,6 +30,8 @@ class UrsinaZombie(Entity):
                 self.y = ray.world_point.y
 
         self.position = self.world_position
+
+        self.zombie_AI = ZombieAI(self.get_position_2d(), target, field, self)
 
 
     def custom_update(self):

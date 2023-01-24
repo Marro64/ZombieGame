@@ -59,7 +59,7 @@ class Search:
 
     @staticmethod
     def output_path(start, target):
-        current_node = target.parent
+        current_node = target
         nodes = []
 
         while current_node is not None and current_node != start:
