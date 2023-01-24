@@ -43,7 +43,7 @@ class HandTracking:
                 # #length, info, img = detector.findDistance(lmList1[8], lmList2[8], img) # with draw
                 # length, info, img = self.detector.findDistance(centerPoint1, centerPoint2, img)  # with draw
 
-        cv2.imshow("Image", img)
+        # cv2.imshow("Image", img)
         cv2.waitKey(1)
 
     def get_point(self, point = -1):

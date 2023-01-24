@@ -24,7 +24,7 @@ class Cursor:
         if self.hand_pos is not None:
             x = map_values(self.hand_pos[0], 535, 128, 0, 640)
             y = map_values(self.hand_pos[1], 223, 422, 0, 640)
-            print(x, y)
+            # print(x, y)
             self.cursor_pos = (x, y)
 
         if self.hands.get_finger_up(1):

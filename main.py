@@ -21,6 +21,7 @@ class Game:
         self.keyboard_handler = KeyboardHandler()
         self.font = pygame.font.SysFont(pygame.font.get_fonts()[0], 64)
         self.time = pygame.time.get_ticks()
+
         self.maze = Maze(Constants.GRID_COLS, Constants.GRID_ROWS, self.size)
         self.maze.generate_open_maze()
         self.search = Search(self.maze)
@@ -38,6 +39,8 @@ class Game:
     def game_loop(self):
         current_time = pygame.time.get_ticks()
         delta_time = current_time - self.time
+        if delta_time > 100:
+            delta_time = 100
         self.time = current_time
         self.cursor.update()
         self.handle_events()
@@ -62,6 +65,7 @@ class Game:
         self.maze.draw_maze(self.screen)
         self.search.draw_path(self.screen)
         self.zombie_spawner.draw(self.screen)
+        self.game_state.draw(self.screen)
         self.cursor.draw(self.screen)
         pygame.display.flip()
 
@@ -132,7 +136,22 @@ class Game:
         pass
 
     def shoot(self, location):
-        self.zombie_spawner.shoot(location)
+        if not self.game_state.game_over:
+            self.zombie_spawner.shoot(location)
+        else:
+            self.game_state.click()
+
+    def game_over(self):
+        self.game_state.end_game()
+
+    def restart(self):
+        self.zombie_spawner.restart()
+
+    def freeze(self):
+        self.zombie_spawner.freeze()
+
+    def add_score(self, score=None):
+        self.game_state.score_up(score)
 
 
 if __name__ == "__main__":

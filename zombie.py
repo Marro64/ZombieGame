@@ -12,6 +12,7 @@ def to_numpy(series):
 class Zombie:
     def __init__(self, position, target, field):
         self.position = numpy.array([float(position[0]), float(position[1])])
+        self.direction = numpy.array([0, 0])
         self.rotation = 0
         self.velocity = 0
         self.target = target
@@ -35,12 +36,13 @@ class Zombie:
 
         direction_vector = numpy.subtract(self.current_node_pos, self.position)
         direction_vector = direction_vector/numpy.linalg.norm(direction_vector)
-        self.rotation = 180-numpy.degrees(numpy.angle(direction_vector[0] + 1j * direction_vector[1]))
         # print(direction_vector, self.rotation)
 
         self.velocity = (self.velocity+self.movement_speed)*.02*dt
+        self.direction = direction_vector * self.velocity
+        self.rotation = 180 - numpy.degrees(numpy.angle(self.direction[0] + 1j * direction_vector[1]))
 
-        self.position += direction_vector * self.velocity
+        self.position += self.direction * self.velocity
 
     def draw(self, surface):
         rotated_sprite = pygame.transform.rotate(self.sprite, self.rotation)
@@ -54,7 +56,8 @@ class Zombie:
             self.goal_reached()
         self.current_node = self.path[self.path_progress]
         self.current_node_pos = numpy.array([self.current_node[0], self.current_node[1]])
-        self.movement_speed = .2/(5*(abs(self.current_node[2] - self.path[self.path_progress-1][2])+.05))
+        # self.movement_speed = .2/(5*(abs(self.current_node[2] - self.path[self.path_progress-1][2])+.2))
+        self.movement_speed = .5
 
     def goal_reached(self):
         self.path_progress = len(self.path) - 1
