@@ -1,11 +1,13 @@
 from ursina.prefabs.first_person_controller import *
 
-
 from ursina import *
 
 
 
-
+# class Player(Entity):
+#     def __init__(self,**kwargs):
+#         self.controller =FirstPersonController(**kwargs)
+#         super().__init__(parent = self.controller)
 class Zombie(Button):
     def __init__(self, x, y, z):
         super().__init__(
@@ -20,7 +22,7 @@ class Zombie(Button):
 
 
 app =   Ursina()
-entity = Entity(model = "Environment",
+entity = Entity(model = "gamePlane_10",
                 # color= color.rgb(0,255,0),
                 texture="grass",
                 position=(0,0,0),
@@ -40,7 +42,7 @@ zombie = Zombie(84.9217, 0, -28.8431)
 # EditorCamera( )
 # camera.orthographic = True
 
-
+#
 camera.position = (128.5648, 10, -127.9014)
 camera.rotation_y  =-45
 
@@ -51,7 +53,9 @@ camera.rotation_y  =-45
 # camera.fov = 40
 # entity.setPos()
 player = FirstPersonController(y=1000)
-# zombie.add_script(SmoothFollow(target=player,offset=[0,0,0],speed=0.5))
+player2=FirstPersonController(y=100)
+# zombie.add_script(SmoothFollow(targe
+# t=player,offset=[0,0,0],speed=0.5))
 # def update():
 #     # eentity.rotation_y+=1
 
