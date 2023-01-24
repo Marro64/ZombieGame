@@ -38,7 +38,6 @@ class Game:
 
     def shoot(self, location):
         if not self.game_state.game_over:
-            self.zombie_spawner.shoot(location)
             self.hitdetection.shoot(location)
         else:
             self.game_state.click()

@@ -27,7 +27,6 @@ class GameState:
 
     def end_game(self):
         self.game_over = True
-        self.game.freeze()
 
     def score_up(self, points=1):
         self.score += points

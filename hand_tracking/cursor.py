@@ -16,7 +16,7 @@ class Cursor(Entity):
             color=color.rgb(255, 0, 0),
             position=(0,0,0),
             rotation=(0, 0, 0),
-            scale=(0.05, 0.05, 0.05)
+            scale=(0.02, 0.02, 0.02)
         )
         self.hands = HandTracking()
         self.hand_pos = None

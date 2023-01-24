@@ -27,7 +27,7 @@ class ZombieAI:
         if not self.is_finished:
             self.position = self.host.get_position_2d()
 
-            if math.dist(self.position, self.current_node_pos) < 3:
+            if math.dist(self.position, self.current_node_pos) < 1:
                 self.increment_path_progress()
 
             direction_vector = numpy.subtract(self.current_node_pos, self.position)

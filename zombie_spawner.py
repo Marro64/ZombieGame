@@ -21,12 +21,14 @@ class ZombieSpawner(Entity):
                 self.spawn_zombie(self.size, self.target, self.maze)
                 self.time_to_next_zombie = randint(1000, 4000)
 
+            to_be_destroyed = []
             for zombie in list(self.zombies):
-                zombie.custom_update()
-
                 if zombie.is_finished():
-                    self.game.game_over()
                     self.zombies.remove(zombie)
+                    to_be_destroyed.append(zombie)
+
+            for thing in to_be_destroyed:
+                destroy(thing)
 
     def draw(self, surface):
         for zombie in self.zombies:

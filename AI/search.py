@@ -49,7 +49,7 @@ class Search:
     @staticmethod
     def highlight_path(start, target):
         # Compute the path, back to front.
-        current_node = target.parent
+        current_node = target
 
         while current_node is not None and current_node != start:
             current_node.set_color((248, 220, 50))
@@ -66,11 +66,13 @@ class Search:
             nodes += [current_node]
             current_node = current_node.parent
 
-        length = len(nodes)-1
+        length = len(nodes)
         path = []
         for i in range(0, length):
-            node = nodes[length-i]
-            path.append([(node.position[0]*node.size[0]), (node.position[1]*node.size[1]), node.height])
+
+            node = nodes[length-i-1]
+            path.append([(node.position[0] * node.size[0] + node.size[0] / 2),
+                         (node.position[1] * node.size[1] + node.size[1] / 2), node.height])
 
         return path
 
