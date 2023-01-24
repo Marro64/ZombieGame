@@ -54,7 +54,7 @@ class Zombie:
             self.goal_reached()
         self.current_node = self.path[self.path_progress]
         self.current_node_pos = numpy.array([self.current_node[0], self.current_node[1]])
-        self.movement_speed = .5/(5*(abs(self.current_node[2] - self.path[self.path_progress-1][2])+.05))
+        self.movement_speed = .2/(5*(abs(self.current_node[2] - self.path[self.path_progress-1][2])+.05))
 
     def goal_reached(self):
         self.path_progress = len(self.path) - 1
