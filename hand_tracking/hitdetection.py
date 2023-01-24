@@ -1,5 +1,3 @@
-import sys
-import time
 import traceback
 from panda3d.core import *
 from panda3d.core import CollisionTraverser, CollisionNode
@@ -11,37 +9,14 @@ from ursina.camera import instance as camera
 from ursina.hit_info import HitInfo
 from ursina.ursinamath import distance
 
+# Code from Ursina, hastily modified to use a virtual curser instead of the OS cursor
 
-class HitDetection():
+
+class HitDetection:
 
     def __init__(self, cursor):
-        self.enabled = False
-        self.visible = True
-        self.locked = False
-        self._locked_mouse_last_frame = False
-        self.position = Vec3(0,0,0)
-        self.delta = Vec3(0,0,0)    # movement since you pressed a mouse button.
-        self.prev_x = 0
-        self.prev_y = 0
-        self.start_x = 0
-        self.start_y = 0
-        self.velocity = Vec3(0,0,0)
-        self.moving = False
-        self.prev_click_time = time.time()
-        self.prev_click_pos = None
-        self.double_click_distance = .5
-        self.double_click_movement_limit = .01
-
         self.hovered_entity = None # returns the closest hovered entity with a collider.
-        self.left = False
-        self.right = False
-        self.middle = False
-        self.delta_drag = Vec3(0,0,0)   # movement between left mouse down and left mouse up.
-
-        self.update_step = 1
         self.traverse_target = scene  # set this to None to disable collision with scene, which might be a good idea if you have lots of colliders.
-        self._i = 0
-        self._mouse_watcher = None
         self._picker = CollisionTraverser()  # Make a traverser
         self._pq = CollisionHandlerQueue()  # Make a handler
         self._pickerNode = CollisionNode('mouseRay')
@@ -56,130 +31,8 @@ class HitDetection():
         self.collisions = []
         self.enabled = True
 
-        self.cursor = cursor
 
-    @property
-    def x(self):
-        if not self._mouse_watcher.has_mouse():
-            return 0
-        return self._mouse_watcher.getMouseX() / 2 * window.aspect_ratio  # same space as ui stuff
-
-    @x.setter
-    def x(self, value):
-        self.position = (value, self.y)
-
-
-    @property
-    def y(self):
-        if not self._mouse_watcher.has_mouse():
-            return 0
-
-        return self._mouse_watcher.getMouseY() / 2
-
-    @y.setter
-    def y(self, value):
-        self.position = (self.x, value)
-
-
-    @property
-    def position(self):
-        return Vec3(self.x, self.y, 0)
-
-    @position.setter
-    def position(self, value):
-        self.cursor.get_position()
-
-    def __setattr__(self, name, value):
-
-        if name == 'visible':
-            window.set_cursor_hidden(not value)
-            if application.base:
-                application.base.win.requestProperties(window)
-
-        if name == 'locked':
-            try:
-                object.__setattr__(self, name, value)
-                window.set_cursor_hidden(value)
-                if value:
-                    window.set_mouse_mode(window.M_relative)
-                else:
-                    window.set_mouse_mode(window.M_absolute)
-
-                application.base.win.requestProperties(window)
-                self._locked_mouse_last_frame = True
-            except:
-                pass
-
-        try:
-            super().__setattr__(name, value)
-            # return
-        except:
-            pass
-
-
-    # def input(self, key):
-    #     if not self.enabled:
-    #         return
-    #
-    #     if key.endswith('mouse down'):
-    #         self.start_x = self.x
-    #         self.start_y = self.y
-    #
-    #     elif key.endswith('mouse up'):
-    #         self.delta_drag = Vec3(
-    #             self.x - self.start_x,
-    #             self.y - self.start_y,
-    #             0
-    #             )
-    #
-    #
-    #     if key == 'left mouse down':
-    #         self.left = True
-    #         if self.hovered_entity:
-    #             if hasattr(self.hovered_entity, 'on_hit') and callable(self.hovered_entity.on_hit):
-    #                 try:
-    #                     self.hovered_entity.on_hit()
-    #                 except Exception as e:
-    #                     print(traceback.format_exc())
-    #                     application.quit()
-    #
-    #             for s in self.hovered_entity.scripts:
-    #                 if hasattr(s, 'on_hit') and callable(s.on_hit):
-    #                     s.on_hit()
-    #
-    #         # double click
-    #         if time.time() - self.prev_click_time <= self.double_click_distance:
-    #             if abs(self.x-self.prev_click_pos[0]) > self.double_click_movement_limit or abs(self.y-self.prev_click_pos[1]) > self.double_click_movement_limit:
-    #                 return # moused moved too much since previous click, so don't register double click.
-    #
-    #             application.base.input('double click')
-    #             if self.hovered_entity:
-    #                 if hasattr(self.hovered_entity, 'on_double_click'):
-    #                     try:
-    #                         self.hovered_entity.on_double_click()
-    #                     except Exception as e:
-    #                         print(traceback.format_exc())
-    #                         application.quit()
-    #
-    #                 for s in self.hovered_entity.scripts:
-    #                     if hasattr(s, 'on_double_click'):
-    #                         s.on_double_click()
-    #
-    #         self.prev_click_time = time.time()
-    #         self.prev_click_pos = (self.x, self.y)
-    #
-    #
-    #     if key == 'left mouse up':
-    #         self.left = False
-    #     if key == 'right mouse down':
-    #         self.right = True
-    #     if key == 'right mouse up':
-    #         self.right = False
-    #     if key == 'middle mouse down':
-    #         self.middle = True
-    #     if key == 'middle mouse up':
-    #         self.middle = False
-
+    # calls on_hit() for the frontmost enemies overlapping an UI coordinate
     def shoot(self, position):
         x = position[0]
         y = position[1]
@@ -204,58 +57,6 @@ class HitDetection():
             for s in self.hovered_entity.scripts:
                 if hasattr(s, 'on_hit') and callable(s.on_hit):
                     s.on_hit()
-
-
-    def update(self):
-        if not self.enabled or not self._mouse_watcher.has_mouse() or self._locked_mouse_last_frame:
-            self.velocity = Vec3(0,0,0)
-            self._locked_mouse_last_frame = False
-            return
-
-        self.moving = self.x + self.y != self.prev_x + self.prev_y
-
-        if self.moving:
-            if self.locked:
-                self.velocity = self.position
-                self.position = (0,0)
-            else:
-                self.velocity = Vec3(self.x - self.prev_x, (self.y - self.prev_y) / window.aspect_ratio ,0)
-        else:
-            self.velocity = Vec3(0,0,0)
-
-        if self.left or self.right or self.middle:
-            self.delta = Vec3(self.x - self.start_x, self.y - self.start_y, 0)
-
-        self.prev_x = self.x
-        self.prev_y = self.y
-
-
-        self._i += 1
-        if self._i < self.update_step:
-            return
-        # collide with ui
-        self._pickerNP.reparent_to(scene.ui_camera)
-        self._pickerRay.set_from_lens(camera._ui_lens_node, self.x * 2 / window.aspect_ratio, self.y * 2)
-        self._picker.traverse(camera.ui)
-        if self._pq.get_num_entries() > 0:
-            # print('collided with ui', self._pq.getNumEntries())
-            self.find_collision()
-            return
-
-
-        else:
-            self.collision = None
-            # print('mouse miss', base.render)
-            # unhover all if it didn't hit anything
-            for entity in scene.entities:
-                if hasattr(entity, 'hovered') and entity.hovered:
-                    entity.hovered = False
-                    self.hovered_entity = None
-                    if hasattr(entity, 'on_mouse_exit'):
-                        entity.on_mouse_exit()
-                    for s in entity.scripts:
-                        if hasattr(s, 'on_mouse_exit'):
-                            s.on_mouse_exit()
 
     @property
     def normal(self): # returns the normal of the polygon, in local space.
@@ -335,17 +136,3 @@ class HitDetection():
                     if hasattr(s, 'on_mouse_exit'):
                         s.on_mouse_exit()
 
-
-if __name__ == '__main__':
-    from ursina import *
-    app = Ursina()
-    Button(parent=scene, text='a')
-
-    def update():
-        print(mouse.position, mouse.point)
-
-    Cursor()
-    mouse.visible = False
-
-
-    app.run()

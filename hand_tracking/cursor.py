@@ -9,7 +9,7 @@ def map_values(x, a, b, c, d):
 
 
 class Cursor(Entity):
-    def __init__(self, game, tracked_point=5):
+    def __init__(self, game, tracked_point=9, trigger_finger=0):
         super().__init__(
             parent=camera.ui,
             model="quad",
@@ -22,6 +22,7 @@ class Cursor(Entity):
         self.hand_pos = None
         self.cursor_pos = (0, 0)
         self.tracked_point = tracked_point
+        self.trigger_finger = trigger_finger
         self.has_shot = False
         self.game = game
 
@@ -39,7 +40,7 @@ class Cursor(Entity):
             # print(x, y)
             self.cursor_pos = (x, y)
 
-        if self.hands.get_finger_up(1):
+        if self.hands.get_finger_up(self.trigger_finger):
             if self.has_shot:
                 self.reload()
         else:
