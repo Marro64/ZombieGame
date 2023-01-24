@@ -1,13 +1,9 @@
-import sys
-from AI.helpers.keyboard_handler import KeyboardHandler
 from AI.maze import Maze
 from AI.helpers.constants import Constants
-from AI.search import Search
 from zombie_spawner import ZombieSpawner
 from hand_tracking.cursor import Cursor as Aim
 from game_state import GameState
 from ursinaEnvironment import UrsinaEnvironment
-from hand_tracking.hitdetection import HitDetection
 
 from ursina import *
 
@@ -22,20 +18,15 @@ class Game:
 
         self.size = (200, 200)
         self.maze = Maze(Constants.GRID_COLS, Constants.GRID_ROWS, self.size)
-        self.maze.generate_open_maze()
-        self.search = Search(self.maze)
-        self.zombie_spawner = ZombieSpawner(self, self.size, (0, 0), self.maze)
-        self.cursor = Aim(self)
-        self.game_state = GameState(self)
-        self.ursina_environment = UrsinaEnvironment(self.size)
-        self.hitdetection = HitDetection(self.cursor)
+        self.maze.generate_open_maze() # Open maze, which has no walls. Instead, it has a heightmap.
+        self.zombie_spawner = ZombieSpawner(self, self.size, (0, 0), self.maze) # Spawns and keeps track of the
+        self.cursor = Aim(self) # The finger tracking, renamed to aim to not clash with Ursina's cursor object
+        self.game_state = GameState(self) # Keeps track of things like score and when the game ends. Mostly unfinished.
+        self.ursina_environment = UrsinaEnvironment(self.size) # Ground and camera setup
 
         self.app.run()
 
-    def update(self):
-        self.cursor.update()
-        self.zombie_spawner.update(time.dt)
-
+    # The following are interfaces for different classes to communicate
     def shoot(self, location):
         if not self.game_state.game_over:
             self.hitdetection.shoot(location)
@@ -57,5 +48,3 @@ class Game:
 
 if __name__ == "__main__":
     game = Game()
-    while True:
-        game.game_loop()

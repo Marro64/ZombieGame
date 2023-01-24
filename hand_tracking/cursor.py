@@ -1,5 +1,6 @@
 from hand_tracking.hand_tracking import HandTracking
 from ursina import *
+from hand_tracking.hitdetection import HitDetection
 from numpy import interp
 
 
@@ -18,7 +19,8 @@ class Cursor(Entity):
             rotation=(0, 0, 0),
             scale=(0.02, 0.02, 0.02)
         )
-        self.hands = HandTracking()
+        self.hitdetection = HitDetection() # Detects the hits on the zombies from the cursor.
+        self.hands = HandTracking() # Handtracking code, fresh from the internet
         self.hand_pos = None
         self.cursor_pos = (0, 0)
         self.tracked_point = tracked_point
@@ -53,7 +55,7 @@ class Cursor(Entity):
         self.has_shot = True
         self.color = color.rgb(255, 255, 0)
         if self.game is not None:
-            self.game.shoot(self.cursor_pos)
+            self.hitdetection.shoot(self.position)
 
     def reload(self):
         self.has_shot = False

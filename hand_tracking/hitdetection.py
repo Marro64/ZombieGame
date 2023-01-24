@@ -14,7 +14,7 @@ from ursina.ursinamath import distance
 
 class HitDetection:
 
-    def __init__(self, cursor):
+    def __init__(self):
         self.hovered_entity = None # returns the closest hovered entity with a collider.
         self.traverse_target = scene  # set this to None to disable collision with scene, which might be a good idea if you have lots of colliders.
         self._picker = CollisionTraverser()  # Make a traverser
