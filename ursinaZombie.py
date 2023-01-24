@@ -8,11 +8,11 @@ class UrsinaZombie(Entity):
         super().__init__(
             parent=scene,
             # color=color.rgb(255, 255, 255),
-            model="Assets/zombie.fbx",
+            model="Assets/3zombie.fbx",
             texture="Assets/zombie",
             rotation=(0, 0, 0),
             collider="box",
-            scale=(0.2, 0.2, 0.2)
+            scale=(0.08, 0.08, 0.08)
         )
         self.speed = 5
         self.height = 2
@@ -38,11 +38,9 @@ class UrsinaZombie(Entity):
 
 
     def update(self):
-        self.direction = self.zombie_AI.update_heading()
-        self.rotation.y = 180 - numpy.degrees(numpy.angle(self.direction[0] + 1j * self.direction[1]))
-
         direction_2d = self.zombie_AI.update_heading()
         self.direction = Vec3(direction_2d[0], 0, direction_2d[1])
+        self.rotation = (0, 180 - numpy.degrees(numpy.angle(direction_2d[0] + 1j * direction_2d[1])), 0)
         self.position += self.direction * self.speed * time.dt
         ray = raycast(self.world_position+(0,self.height,0), self.down, ignore=(self,))
         if ray.world_point is not None:
