@@ -31,12 +31,12 @@ class Cursor(Entity):
 
         self.hand_pos = self.hands.get_point(self.tracked_point)
         if self.hand_pos is not None:
-            print(self.hand_pos)
+            # print(self.hand_pos)
             x = map_values(self.hand_pos[0], 535, 128, -.5, .5)
             y = map_values(self.hand_pos[1], 223, 422, .5, -.5)
             # x = interp(self.hand_pos[0], [535, 128], [-5, 5])
             # y = interp(self.hand_pos[1], [223, 422], [-5, 5])
-            print(x, y)
+            # print(x, y)
             self.cursor_pos = (x, y)
 
         if self.hands.get_finger_up(1):

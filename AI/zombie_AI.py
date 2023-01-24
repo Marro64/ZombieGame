@@ -50,3 +50,6 @@ class ZombieAI:
 
     def get_direction(self):
         return self.direction
+
+    def finished(self):
+        return self.is_finished

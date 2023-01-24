@@ -1,9 +1,11 @@
-from zombie import Zombie
+from ursina import *
+from ursinaZombie import UrsinaZombie as Zombie
 from random import randint
 
 
-class ZombieSpawner:
+class ZombieSpawner(Entity):
     def __init__(self, game, size, target, maze):
+        super().__init__()
         self.size = size
         self.target = target
         self.maze = maze
@@ -12,34 +14,36 @@ class ZombieSpawner:
         self.time_to_next_zombie = 1
         self.running = True
 
-    def update(self, dt):
+    def update(self):
         if self.running:
-            self.time_to_next_zombie -= dt
+            self.time_to_next_zombie -= time.dt*1000
             if self.time_to_next_zombie <= 0:
                 self.spawn_zombie(self.size, self.target, self.maze)
                 self.time_to_next_zombie = randint(1000, 4000)
 
             for zombie in list(self.zombies):
-                zombie.update(dt)
+                zombie.custom_update()
 
-                if zombie.is_finished:
+                if zombie.is_finished():
                     self.game.game_over()
+                    self.zombies.remove(zombie)
 
     def draw(self, surface):
         for zombie in self.zombies:
             zombie.draw(surface)
 
     def shoot(self, position):
-        for zombie in list(self.zombies):
-            if zombie.hit_check(position):
-                self.zombies.remove(zombie)
-                self.game.add_score(1)
+        pass
+        # for zombie in list(self.zombies):
+        #     if zombie.hit_check(position):
+        #         self.zombies.remove(zombie)
+        #         self.game.add_score(1)
 
     def spawn_zombie(self, size, target, maze):
         x = randint(0, size[0]-1)
         y = randint(0, size[1]-1)
 
-        self.zombies.append(Zombie((x, y), target, maze))
+        self.zombies.append(Zombie(target, maze, x=x, y=1000, z=y))
 
     def restart(self):
         self.zombies = []

@@ -20,6 +20,8 @@ class UrsinaEnvironment:
                         collider="mesh"
                         )
 
+        # camera.position = (100, 200, 100)
+        # camera.rotation_x  = 90
         camera.position = (0, 4, 0)
         camera.rotation_y = 45
         camera.rotation_x = -5
@@ -38,8 +40,7 @@ class UrsinaEnvironment:
 #
 # camera.position = (128.5648, 10, 127.9014)
 # camera.rotation_y = -135
-# camera.position = (0, 400, 0)
-# camera.rotation_x  = 90
+
 # camera.position = (100, 2, 100)
 # camera.rotation_y = -135
 

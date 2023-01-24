@@ -11,7 +11,7 @@ class UrsinaZombie(Entity):
             # color=color.rgb(255, 255, 255),
             rotation=(0, 0, 0),
             collider="box",
-            scale=(0.05, 0.05, 0.05)
+            scale=(0.2, 0.2, 0.2)
         )
         self.speed = 5
         self.height = 2
@@ -34,7 +34,7 @@ class UrsinaZombie(Entity):
         self.position = self.world_position
 
 
-    def update(self):
+    def custom_update(self):
 
         # self.direction = Vec3(
         #     self.forward * (held_keys['w'] - held_keys['s'])
@@ -61,7 +61,7 @@ class UrsinaZombie(Entity):
         self.direction = Vec3(direction_2d[0], 0, direction_2d[1])
 
         # self.position += self.direction * self.speed * time.dt
-        self.position += self.direction * self.speed * (1/60)
+        self.position += self.direction * self.speed * time.dt
         # print(self.position)
 
         # if self.gravity:
@@ -121,6 +121,8 @@ class UrsinaZombie(Entity):
     def get_position_2d(self):
         return self.position[0], self.position[2]
 
+    def is_finished(self):
+        return self.zombie_AI.finished()
 
 
 if __name__ == '__main__':
