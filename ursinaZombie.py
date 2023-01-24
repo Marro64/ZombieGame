@@ -5,7 +5,14 @@ from AI.zombie_AI import ZombieAI
 class UrsinaZombie(Entity):
     def __init__(self, target, field, **kwargs):
         self.cursor = Entity(parent=camera.ui, model='quad', color=color.pink, scale=.008, rotation_z=45)
-        super().__init__()
+        super().__init__(
+            parent=scene,
+            model="zombie",
+            # color=color.rgb(255, 255, 255),
+            rotation=(0, 0, 0),
+            collider="box",
+            scale=(0.05, 0.05, 0.05)
+        )
         self.speed = 5
         self.height = 2
         mouse.locked = False
@@ -25,15 +32,6 @@ class UrsinaZombie(Entity):
                 self.y = ray.world_point.y
 
         self.position = self.world_position
-        super().__init__(
-            parent =scene,
-            model="zombie",
-            # color=color.rgb(255, 255, 255),
-            position=(self.x,self.y,self.z),
-            rotation=(0, 0, 0),
-            collider = "box",
-            scale=(0.05, 0.05, 0.05)
-           )
 
 
     def update(self):
@@ -121,7 +119,7 @@ class UrsinaZombie(Entity):
         self.cursor.enabled = False
 
     def get_position_2d(self):
-        return self.position[0]+100, self.position[2]+100
+        return self.position[0], self.position[2]
 
 
 
