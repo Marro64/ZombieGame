@@ -8,14 +8,14 @@ def map_values(x, a, b, c, d):
 
 
 class Cursor:
-    def __init__(self, tracked_point=5, shooting_handler=None):
+    def __init__(self, game, tracked_point=5):
         self.hands = HandTracking()
         self.hand_pos = None
         self.cursor_pos = (0, 0)
         self.tracked_point = tracked_point
         self.color = (255, 0, 0)
-        self.shooting_handler = shooting_handler
         self.has_shot = False
+        self.game = game
 
     def update(self):
         self.hands.update()
@@ -40,8 +40,8 @@ class Cursor:
     def shoot(self):
         self.has_shot = True
         self.color = (255, 255, 0)
-        if self.shooting_handler is not None:
-            self.shooting_handler.shoot(self.cursor_pos)
+        if self.game is not None:
+            self.game.shoot(self.cursor_pos)
 
     def reload(self):
         self.has_shot = False

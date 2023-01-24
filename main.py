@@ -6,6 +6,7 @@ from AI.helpers.constants import Constants
 from AI.search import Search
 from zombie_spawner import ZombieSpawner
 from hand_tracking.cursor import Cursor
+from game_state import GameState
 
 
 class Game:
@@ -23,13 +24,10 @@ class Game:
         self.maze = Maze(Constants.GRID_COLS, Constants.GRID_ROWS, self.size)
         self.maze.generate_open_maze()
         self.search = Search(self.maze)
+        self.zombie_spawner = ZombieSpawner(self, self.size, (-1, -1), self.maze)
+        self.cursor = Cursor(self)
+        self.game_state = GameState(self)
 
-        self.start = (0, 0)
-        self.target = (-1, -1)
-        # self.search.pathfind((0, 0), (-1, -1))
-        self.zombie_spawner = ZombieSpawner(self.size, self.target, self.maze)
-
-        self.cursor = Cursor(shooting_handler=self.zombie_spawner)
 
     """
     Method 'game_loop' will be executed every frame to drive
@@ -101,33 +99,6 @@ class Game:
     """
     def handle_key_down(self, event):
         self.keyboard_handler.key_pressed(event.key)
-        # if event.key == pygame.K_m:
-        #     print("Generating Maze")
-        #     self.maze.generate_maze()
-        # if event.key == pygame.K_o:
-        #     print("Generating Obstacle")
-        #     self.maze.generate_obstacles()
-        # if event.key == pygame.K_r:
-        #     print("Generating Rooms")
-        #     self.maze.generate_room()
-        if event.key == pygame.K_e:
-            print("Generating Empty")
-            self.maze.generate_open_maze()
-        # if event.key == pygame.K_b:
-        #     print("BFS")
-        #     self.search.breadth_first_solution()
-        # if event.key == pygame.K_d:
-        #     print("DFS")
-        #     self.search.depth_first_solution()
-        # if event.key == pygame.K_g:
-        #     print("Greedy")
-        #     self.search.greedy_search()
-        if event.key == pygame.K_a:
-            print("AStar")
-            self.search.pathfind(self.start, self.target)
-        # if event.key == pygame.K_x:
-        #     print("Recursive DFS")
-        #     self.search.depth_first_recursive()
         if event.key == pygame.K_p:
             self.cursor.print_debug()
 
@@ -149,20 +120,19 @@ class Game:
     Similar to void mousePressed() in Processing
     """
     def handle_mouse_pressed(self, event):
+        # x = event.pos[0]
+        # y = event.pos[1]
         pass
-        x = event.pos[0]
-        y = event.pos[1]
-        if event.button == 1:
-            self.start = (x, y)
-        if event.button == 3:
-            self.target = (x, y)
-        self.search.pathfind(self.start, self.target)
+
 
     """
     Similar to void mouseReleased() in Processing
     """
     def handle_mouse_released(self, event):
         pass
+
+    def shoot(self, location):
+        self.zombie_spawner.shoot(location)
 
 
 if __name__ == "__main__":

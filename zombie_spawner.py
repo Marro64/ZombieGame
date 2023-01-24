@@ -3,11 +3,12 @@ from random import randint
 
 
 class ZombieSpawner:
-    def __init__(self, size, target, maze):
+    def __init__(self, game, size, target, maze):
         self.size = size
         self.target = target
         self.maze = maze
         self.zombies = []
+        self.game = game
         self.time_to_next_zombie = 1
 
     def update(self, dt):
@@ -36,4 +37,8 @@ class ZombieSpawner:
         y = randint(0, size[1]-1)
 
         self.zombies.append(Zombie((x, y), target, maze))
+
+    def restart(self):
+        self.zombies = []
+        self.time_to_next_zombie = 1000
 
