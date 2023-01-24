@@ -1,5 +1,5 @@
 import bisect
-from grid_element_path import GridElementPath
+from AI.grid_element_path import GridElementPath
 
 
 class Search:

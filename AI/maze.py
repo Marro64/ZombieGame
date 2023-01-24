@@ -1,5 +1,5 @@
 import random
-from grid_element import GridElement
+from AI.grid_element import GridElement
 from math import sqrt
 
 

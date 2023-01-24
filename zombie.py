@@ -1,5 +1,5 @@
 from pygame import draw
-from search import Search
+from AI.search import Search
 import math
 import numpy
 import pygame

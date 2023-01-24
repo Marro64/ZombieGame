@@ -1,6 +1,6 @@
 from math import sqrt, pow
 from pygame import draw
-from heightmap import heightMap
+from AI.heightmap import heightMap
 
 
 class GridElement:

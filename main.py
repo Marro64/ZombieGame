@@ -1,6 +1,6 @@
 import pygame
 import sys
-from AI.helpers import KeyboardHandler
+from AI.helpers.keyboard_handler import KeyboardHandler
 from AI.maze import Maze
 from AI.helpers.constants import Constants
 from AI.search import Search

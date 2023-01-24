@@ -3,7 +3,7 @@ from PIL import Image
 
 
 class heightMap:
-    def __init__(self, ref="map.bmp"):
+    def __init__(self, ref="AI/map.bmp"):
         image = Image.open(ref).convert("L")
         # noinspection PyTypeChecker
         image_array = asarray(image)
