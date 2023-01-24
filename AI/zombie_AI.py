@@ -5,12 +5,8 @@ import numpy
 import pygame
 
 
-def to_numpy(series):
-    return numpy.array(list(series))
-
-
-class Zombie:
-    def __init__(self, position, target, field):
+class ZombieAI:
+    def __init__(self, position, target, field, host):
         self.position = numpy.array([float(position[0]), float(position[1])])
         self.direction = numpy.array([0, 0])
         self.rotation = 0
@@ -24,33 +20,20 @@ class Zombie:
         self.movement_speed = None
         self.increment_path_progress()
         self.is_finished = False
-        self.hitbox = (48, 48)
 
-        self.sprite = pygame.image.load('zombie-topdown.png').convert_alpha()
-        self.sprite = pygame.transform.scale(self.sprite, (32, 32)
-                                             )
+        self.host = host
 
-    def update(self, dt):
+    def update_heading(self, dt=1):
+        self.position = self.host.get_position_2d()
+
         if math.dist(self.position, self.current_node_pos) < 10:
             self.increment_path_progress()
 
         direction_vector = numpy.subtract(self.current_node_pos, self.position)
         direction_vector = direction_vector/numpy.linalg.norm(direction_vector)
-        # print(direction_vector, self.rotation)
+        self.direction = direction_vector
 
-        self.velocity = (self.velocity+self.movement_speed)*.02*dt
-        self.direction = direction_vector * self.velocity
-        self.rotation = 180 - numpy.degrees(numpy.angle(self.direction[0] + 1j * direction_vector[1]))
-
-        self.position += self.direction * self.velocity
-
-        print(self.position)
-
-    def draw(self, surface):
-        rotated_sprite = pygame.transform.rotate(self.sprite, self.rotation)
-        surface.blit(rotated_sprite, (self.position[0] - rotated_sprite.get_width()/2, self.position[1] - rotated_sprite.get_height()/2))
-        draw.rect(surface, (255, 0, 0), (self.position[0], self.position[1], 1, 1), 0)
-        pass
+        return self.direction
 
     def increment_path_progress(self):
         self.path_progress += 1
@@ -64,17 +47,6 @@ class Zombie:
     def goal_reached(self):
         self.path_progress = len(self.path) - 1
         self.is_finished = True
-
-    def hit_check(self, position):
-        left = self.position[0] - self.hitbox[0]/2
-        top = self.position[1] - self.hitbox[1]/2
-        right = self.position[0] + self.hitbox[0]/2
-        bottom = self.position[1] + self.hitbox[1]/2
-
-        if left < position[0] < right and top < position[1] < bottom:
-            return True
-        else:
-            return False
 
     def get_direction(self):
         return self.direction

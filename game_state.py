@@ -9,9 +9,9 @@ class GameState:
 
     def draw(self, surface):
         font = pygame.font.SysFont(None, 24)
-
         img = font.render(f'Score: {self.score}', True, (0, 0, 255))
         surface.blit(img, (20, 20))
+
         if self.game_over:
             font = pygame.font.SysFont(None, 72)
             img = font.render(f'Game Over', True, (255, 0, 0))
